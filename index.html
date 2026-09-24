@@ -1,71 +1,514 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+
 <title>Simulated Online Shopping Task</title>
+
 <style>
-body{font-family:Arial,sans-serif;background:#f5f6f8;margin:0;color:#222}
-.wrap{max-width:1050px;margin:auto;padding:28px 18px 50px}
-.notice,.card{background:#fff;border:1px solid #ddd;border-radius:12px;padding:18px}
-.notice{margin-bottom:22px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-.card{box-shadow:0 2px 7px rgba(0,0,0,.05)}.recommended{border:2px solid #333}
-.badge{display:inline-block;font-size:13px;padding:5px 8px;border-radius:20px;background:#eee;margin-bottom:10px}
-.product-img{height:150px;background:#e9ebee;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:48px}
-.price{font-size:22px;font-weight:700;margin:8px 0}.meta{color:#555;line-height:1.6}
-button{width:100%;padding:12px;border:0;border-radius:8px;font-size:15px;cursor:pointer;background:#222;color:#fff;margin-top:14px}
-.exit{background:#fff;color:#333;border:1px solid #999;max-width:260px}
-button:disabled{opacity:.55}.hidden{display:none}.small{font-size:13px;color:#666}
-</style></head><body><div class="wrap">
-<div class="notice"><h1>Simulated Online Shopping Task</h1>
-<p>You are considering purchasing wireless headphones. Please review the products and select the product you would choose.</p>
-<p class="small">This is a simulated shopping task for academic research. No real purchase will be made.</p>
-<p><b>Time remaining: <span id="timer">60</span> seconds</b></p></div>
 
-<h2>AI-Powered Recommendation</h2>
-<div class="card recommended"><span class="badge">Recommended for you by AI</span>
-<div class="product-img">🎧</div><h3>SoundPro X1</h3><div class="price">₹2,999</div>
-<div class="meta">Battery: 30 hours<br>Rating: 4.4/5<br>Wireless noise cancellation</div>
-<button onclick="choose('AI_RECOMMENDED')">Select this product</button></div>
+body{
+  font-family:Arial,sans-serif;
+  background:#f5f6f8;
+  margin:0;
+  color:#222;
+}
 
-<h2>Other Available Headphones</h2>
-<div class="grid">
-<div class="card"><span class="badge">Alternative</span><div class="product-img">🎧</div>
-<h3>SoundPro Y1</h3><div class="price">₹2,999</div>
-<div class="meta">Battery: 28 hours<br>Rating: 4.4/5<br>Wireless noise cancellation</div>
-<button onclick="choose('ALTERNATIVE_1')">Select this product</button></div>
-<div class="card"><span class="badge">Alternative</span><div class="product-img">🎧</div>
-<h3>SoundPro Z1</h3><div class="price">₹2,999</div>
-<div class="meta">Battery: 32 hours<br>Rating: 4.3/5<br>Wireless noise cancellation</div>
-<button onclick="choose('ALTERNATIVE_2')">Select this product</button></div>
+.wrap{
+  max-width:1050px;
+  margin:auto;
+  padding:28px 18px 50px;
+}
+
+.notice,
+.card{
+  background:#fff;
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:18px;
+}
+
+.notice{
+  margin-bottom:22px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+}
+
+.card{
+  box-shadow:0 2px 7px rgba(0,0,0,.05);
+}
+
+.recommended{
+  border:2px solid #333;
+}
+
+.badge{
+  display:inline-block;
+  font-size:13px;
+  padding:5px 8px;
+  border-radius:20px;
+  background:#eee;
+  margin-bottom:10px;
+}
+
+.product-img{
+  height:150px;
+  background:#e9ebee;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+}
+
+.price{
+  font-size:22px;
+  font-weight:700;
+  margin:8px 0;
+}
+
+.meta{
+  color:#555;
+  line-height:1.6;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  border:0;
+  border-radius:8px;
+  font-size:15px;
+  cursor:pointer;
+  background:#222;
+  color:#fff;
+  margin-top:14px;
+}
+
+.exit{
+  background:#fff;
+  color:#333;
+  border:1px solid #999;
+  max-width:260px;
+}
+
+button:disabled{
+  opacity:.55;
+}
+
+.hidden{
+  display:none;
+}
+
+.small{
+  font-size:13px;
+  color:#666;
+}
+
+@media(max-width:700px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="wrap">
+
+
+<div class="notice">
+
+<h1>Simulated Online Shopping Task</h1>
+
+<p>
+You are considering purchasing wireless headphones.
+Please review the products and select the product you would choose.
+</p>
+
+<p class="small">
+This is a simulated shopping task for academic research.
+No real purchase will be made.
+</p>
+
+<p>
+<b>
+Time remaining:
+<span id="timer">60</span> seconds
+</b>
+</p>
+
 </div>
 
-<div style="text-align:center;margin-top:28px"><button class="exit" onclick="exitTask()">Exit shopping</button></div>
-<div id="status" class="hidden notice"></div></div>
+
+<!-- AI RECOMMENDED PRODUCT -->
+
+<h2>AI-Powered Recommendation</h2>
+
+<div class="card recommended">
+
+<span class="badge">
+Recommended for you by AI
+</span>
+
+<div class="product-img">
+🎧
+</div>
+
+<h3>SoundPro X1</h3>
+
+<div class="price">
+₹2,999
+</div>
+
+<div class="meta">
+Battery: 30 hours<br>
+Rating: 4.4/5<br>
+Wireless noise cancellation
+</div>
+
+<button onclick="choose('AI_RECOMMENDED')">
+Select this product
+</button>
+
+</div>
+
+
+<!-- ALTERNATIVES -->
+
+<h2>Other Available Headphones</h2>
+
+<div class="grid">
+
+
+<div class="card">
+
+<span class="badge">
+Alternative
+</span>
+
+<div class="product-img">
+🎧
+</div>
+
+<h3>SoundPro Y1</h3>
+
+<div class="price">
+₹2,999
+</div>
+
+<div class="meta">
+Battery: 28 hours<br>
+Rating: 4.4/5<br>
+Wireless noise cancellation
+</div>
+
+<button onclick="choose('ALTERNATIVE_1')">
+Select this product
+</button>
+
+</div>
+
+
+<div class="card">
+
+<span class="badge">
+Alternative
+</span>
+
+<div class="product-img">
+🎧
+</div>
+
+<h3>SoundPro Z1</h3>
+
+<div class="price">
+₹2,999
+</div>
+
+<div class="meta">
+Battery: 32 hours<br>
+Rating: 4.3/5<br>
+Wireless noise cancellation
+</div>
+
+<button onclick="choose('ALTERNATIVE_2')">
+Select this product
+</button>
+
+</div>
+
+
+</div>
+
+
+<!-- EXIT -->
+
+<div style="text-align:center;margin-top:28px">
+
+<button class="exit"
+        onclick="exitTask()">
+
+Exit shopping
+
+</button>
+
+</div>
+
+
+<!-- STATUS -->
+
+<div id="status"
+     class="hidden notice">
+
+</div>
+
+
+</div>
+
 
 <script>
-const ENDPOINT="https://script.google.com/macros/s/AKfycbypdgE99N4ZHaXjdesm08obXB5S05OkYuAKj59OFJzjDoUoCr3rVRAHty_uI8Twbhgf/exec";
-const RETURN_URL="";
-const params=new URLSearchParams(location.search);
-const participantId=params.get("pid")||crypto.randomUUID();
-const condition=params.get("cond")||"unknown";
-let finished=false, seconds=60;
 
-function sendEvent(eventType,choice=""){
- const payload={participant_id:participantId,condition:condition,event:eventType,choice:choice,
- timestamp:new Date().toISOString(),page:location.href};
- if(ENDPOINT && !ENDPOINT.includes("PASTE_YOUR"))
- fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
- body:JSON.stringify(payload),keepalive:true}).catch(()=>{});
+
+/* =========================================================
+   GOOGLE APPS SCRIPT WEB APP
+   ========================================================= */
+
+const ENDPOINT =
+"https://script.google.com/macros/s/AKfycbypdgE99N4ZHaXjdesm08obXB5S05OkYuAKj59OFJzjDoUoCr3rVRAHty_uI8Twbhgf/exec";
+
+
+/* =========================================================
+   PARTICIPANT INFORMATION
+   ========================================================= */
+
+const params =
+new URLSearchParams(location.search);
+
+
+/*
+ * If no participant ID is supplied,
+ * create a temporary unique ID.
+ */
+
+const participantId =
+params.get("pid") ||
+crypto.randomUUID();
+
+
+/*
+ * Condition can be passed through the URL
+ * if required later.
+ */
+
+const condition =
+params.get("cond") ||
+"unknown";
+
+
+/* =========================================================
+   TASK VARIABLES
+   ========================================================= */
+
+let finished = false;
+
+let seconds = 60;
+
+
+/* =========================================================
+   SEND EVENT TO GOOGLE APPS SCRIPT
+   ========================================================= */
+
+function sendEvent(eventType, choice = "") {
+
+  const url =
+    ENDPOINT +
+    "?participant_id=" +
+    encodeURIComponent(participantId) +
+
+    "&condition=" +
+    encodeURIComponent(condition) +
+
+    "&event=" +
+    encodeURIComponent(eventType) +
+
+    "&choice=" +
+    encodeURIComponent(choice) +
+
+    "&page=" +
+    encodeURIComponent(location.href);
+
+
+  /*
+   * GET request is used here because it has already
+   * been confirmed that the Web App endpoint is reachable.
+   */
+
+  fetch(url, {
+    method:"GET",
+    mode:"no-cors"
+  }).catch(function(error){
+
+    /*
+     * Errors are intentionally not displayed
+     * to participants.
+     */
+
+  });
+
 }
+
+
+/* =========================================================
+   TASK START
+   ========================================================= */
+
 sendEvent("TASK_STARTED");
 
-const timer=setInterval(()=>{seconds--;document.getElementById("timer").textContent=seconds;
-if(seconds<=0){clearInterval(timer);if(!finished){finished=true;sendEvent("TIMEOUT");show("The shopping task has ended because the time limit was reached.");}}},1000);
 
-function disable(){document.querySelectorAll("button").forEach(b=>b.disabled=true)}
-function show(m){const s=document.getElementById("status");s.textContent=m;s.classList.remove("hidden")}
-function finish(returnNow=true){
- if(RETURN_URL && !RETURN_URL.includes("PASTE_YOUR")) setTimeout(()=>location.href=RETURN_URL,1200);
+/* =========================================================
+   TIMER
+   ========================================================= */
+
+const timer =
+setInterval(function(){
+
+  seconds--;
+
+  document.getElementById("timer")
+    .textContent = seconds;
+
+
+  if(seconds <= 0){
+
+    clearInterval(timer);
+
+    if(!finished){
+
+      finished = true;
+
+      sendEvent("TIMEOUT");
+
+      disableButtons();
+
+      showStatus(
+        "The shopping task has ended because the time limit was reached."
+      );
+
+    }
+
+  }
+
+},1000);
+
+
+/* =========================================================
+   DISABLE BUTTONS
+   ========================================================= */
+
+function disableButtons(){
+
+  document
+    .querySelectorAll("button")
+    .forEach(function(button){
+
+      button.disabled = true;
+
+    });
+
 }
-function choose(choice){if(finished)return;finished=true;clearInterval(timer);sendEvent("PRODUCT_SELECTED",choice);disable();show("Thank you. Your selection has been recorded.");finish()}
-function exitTask(){if(finished)return;finished=true;clearInterval(timer);sendEvent("EXIT");disable();show("The shopping task has ended.");finish()}
-</script></body></html>
+
+
+/* =========================================================
+   SHOW STATUS
+   ========================================================= */
+
+function showStatus(message){
+
+  const status =
+    document.getElementById("status");
+
+  status.textContent = message;
+
+  status.classList.remove("hidden");
+
+}
+
+
+/* =========================================================
+   PRODUCT CHOICE
+   ========================================================= */
+
+function choose(choice){
+
+  if(finished){
+    return;
+  }
+
+  finished = true;
+
+  clearInterval(timer);
+
+  /*
+   * Record the observed product choice.
+   */
+
+  sendEvent(
+    "PRODUCT_SELECTED",
+    choice
+  );
+
+  disableButtons();
+
+  showStatus(
+    "Thank you. Your selection has been recorded. Your participation is complete."
+  );
+
+}
+
+
+/* =========================================================
+   EXIT
+   ========================================================= */
+
+function exitTask(){
+
+  if(finished){
+    return;
+  }
+
+  finished = true;
+
+  clearInterval(timer);
+
+  sendEvent("EXIT");
+
+  disableButtons();
+
+  showStatus(
+    "The shopping task has ended. Thank you for participating."
+  );
+
+}
+
+</script>
+
+
+</body>
+
+</html>
