@@ -8,6 +8,7 @@
 <title>Simulated Online Shopping Task</title>
 
 <style>
+
 body{
   font-family:Arial,sans-serif;
   background:#f5f6f8;
@@ -21,7 +22,8 @@ body{
   padding:28px 18px 50px;
 }
 
-.notice,.card{
+.notice,
+.card{
   background:#fff;
   border:1px solid #ddd;
   border-radius:12px;
@@ -110,17 +112,26 @@ button:disabled{
 }
 
 @media(max-width:700px){
+
   .grid{
     grid-template-columns:1fr;
   }
+
 }
+
 </style>
 
 </head>
 
+
 <body>
 
 <div class="wrap">
+
+
+<!-- =====================================================
+     INTRODUCTION
+     ===================================================== -->
 
 <div class="notice">
 
@@ -146,7 +157,9 @@ Time remaining:
 </div>
 
 
-<!-- AI RECOMMENDED PRODUCT -->
+<!-- =====================================================
+     AI RECOMMENDED PRODUCT
+     ===================================================== -->
 
 <h2>AI-Powered Recommendation</h2>
 
@@ -156,11 +169,15 @@ Time remaining:
 Recommended for you by AI
 </span>
 
-<div class="product-img">🎧</div>
+<div class="product-img">
+🎧
+</div>
 
 <h3>SoundPro X1</h3>
 
-<div class="price">₹2,999</div>
+<div class="price">
+₹2,999
+</div>
 
 <div class="meta">
 Battery: 30 hours<br>
@@ -168,28 +185,40 @@ Rating: 4.4/5<br>
 Wireless noise cancellation
 </div>
 
-<button id="aiButton" onclick="chooseProduct('AI_RECOMMENDED')">
+<button
+  onclick="chooseProduct('AI_RECOMMENDED')">
+
 Select this product
+
 </button>
 
 </div>
 
 
-<!-- ALTERNATIVE PRODUCTS -->
+<!-- =====================================================
+     ALTERNATIVE PRODUCTS
+     ===================================================== -->
 
 <h2>Other Available Headphones</h2>
 
 <div class="grid">
 
+
 <div class="card">
 
-<span class="badge">Alternative</span>
+<span class="badge">
+Alternative
+</span>
 
-<div class="product-img">🎧</div>
+<div class="product-img">
+🎧
+</div>
 
 <h3>SoundPro Y1</h3>
 
-<div class="price">₹2,999</div>
+<div class="price">
+₹2,999
+</div>
 
 <div class="meta">
 Battery: 28 hours<br>
@@ -197,8 +226,11 @@ Rating: 4.4/5<br>
 Wireless noise cancellation
 </div>
 
-<button onclick="chooseProduct('ALTERNATIVE_1')">
+<button
+  onclick="chooseProduct('ALTERNATIVE_1')">
+
 Select this product
+
 </button>
 
 </div>
@@ -206,13 +238,19 @@ Select this product
 
 <div class="card">
 
-<span class="badge">Alternative</span>
+<span class="badge">
+Alternative
+</span>
 
-<div class="product-img">🎧</div>
+<div class="product-img">
+🎧
+</div>
 
 <h3>SoundPro Z1</h3>
 
-<div class="price">₹2,999</div>
+<div class="price">
+₹2,999
+</div>
 
 <div class="meta">
 Battery: 32 hours<br>
@@ -220,8 +258,11 @@ Rating: 4.3/5<br>
 Wireless noise cancellation
 </div>
 
-<button onclick="chooseProduct('ALTERNATIVE_2')">
+<button
+  onclick="chooseProduct('ALTERNATIVE_2')">
+
 Select this product
+
 </button>
 
 </div>
@@ -229,61 +270,102 @@ Select this product
 </div>
 
 
-<!-- EXIT BUTTON -->
+<!-- =====================================================
+     EXIT
+     ===================================================== -->
 
 <div style="text-align:center;margin-top:28px">
 
-<button class="exit" onclick="exitTask()">
+<button
+  class="exit"
+  onclick="exitTask()">
+
 Exit shopping
+
 </button>
 
 </div>
 
 
-<!-- STATUS MESSAGE -->
+<!-- =====================================================
+     STATUS
+     ===================================================== -->
 
-<div id="status" class="hidden notice"></div>
+<div
+  id="status"
+  class="hidden notice">
+
+</div>
+
 
 </div>
 
 
 <script>
 
-/* =========================================================
-   APPS SCRIPT ENDPOINT
-   ========================================================= */
+
+/* =====================================================
+   GOOGLE APPS SCRIPT ENDPOINT
+   ===================================================== */
 
 const ENDPOINT =
 "https://script.google.com/macros/s/AKfycbypdgE99N4ZHaXjdesm08obXB5S05OkYuAKj59OFJzjDoUoCr3rVRAHty_uI8Twbhgf/exec";
 
 
-/* =========================================================
+/* =====================================================
    PARTICIPANT INFORMATION
-   ========================================================= */
+   ===================================================== */
 
-const params = new URLSearchParams(window.location.search);
+const params =
+new URLSearchParams(window.location.search);
+
+
+/*
+   Use an existing participant ID if supplied.
+   Otherwise generate a unique temporary ID.
+*/
 
 const participantId =
 params.get("pid") ||
-("P-" + Date.now() + "-" + Math.random().toString(36).substring(2,8));
+(
+  "P-" +
+  Date.now() +
+  "-" +
+  Math.random()
+    .toString(36)
+    .substring(2,8)
+);
+
+
+/*
+   Condition can be supplied later through
+   the URL if required.
+*/
 
 const condition =
-params.get("cond") || "unknown";
+params.get("cond") ||
+"unknown";
 
 
-/* =========================================================
+/* =====================================================
    TASK VARIABLES
-   ========================================================= */
+   ===================================================== */
 
 let finished = false;
+
 let seconds = 60;
 
 
-/* =========================================================
-   SEND DATA TO GOOGLE APPS SCRIPT
-   ========================================================= */
+/* =====================================================
+   SEND EVENT
+   ===================================================== */
 
 function sendEvent(eventType, choice = "") {
+
+
+  /*
+     Construct the Apps Script URL.
+  */
 
   const url =
     ENDPOINT +
@@ -302,111 +384,191 @@ function sendEvent(eventType, choice = "") {
     "&page=" +
     encodeURIComponent(window.location.href);
 
+
   /*
-   GET request.
-   This has already been successfully tested
-   against your Apps Script endpoint.
+     Invisible image request.
+
+     This sends a GET request to Apps Script
+     without using fetch() or CORS.
   */
 
-  fetch(url, {
-    method: "GET",
-    mode: "no-cors"
-  }).catch(function(error) {
-    console.log("Recording error:", error);
-  });
+  const tracker =
+    new Image();
+
+
+  tracker.onload =
+    function(){
+
+      console.log(
+        "Event sent:",
+        eventType,
+        choice
+      );
+
+    };
+
+
+  tracker.onerror =
+    function(){
+
+      /*
+         The request may still have reached
+         Apps Script even if the image itself
+         cannot be displayed.
+      */
+
+      console.log(
+        "Event request sent:",
+        eventType,
+        choice
+      );
+
+    };
+
+
+  tracker.src = url;
+
 }
 
 
-/* =========================================================
-   TASK START
-   ========================================================= */
+/* =====================================================
+   RECORD TASK START
+   ===================================================== */
 
-sendEvent("TASK_STARTED");
+sendEvent(
+  "TASK_STARTED"
+);
 
 
-/* =========================================================
+/* =====================================================
    TIMER
-   ========================================================= */
+   ===================================================== */
 
 const timerElement =
 document.getElementById("timer");
 
+
 const timer =
-setInterval(function(){
+setInterval(
+  function(){
 
-  seconds--;
+    seconds--;
 
-  timerElement.textContent = seconds;
+    timerElement.textContent =
+      seconds;
 
-  if(seconds <= 0){
 
-    clearInterval(timer);
+    if(seconds <= 0){
 
-    if(!finished){
+      clearInterval(timer);
 
-      finished = true;
 
-      sendEvent("TIMEOUT");
+      if(!finished){
 
-      disableButtons();
+        finished = true;
 
-      showStatus(
-        "The shopping task has ended because the time limit was reached."
-      );
+
+        /*
+           Record timeout.
+        */
+
+        sendEvent(
+          "TIMEOUT"
+        );
+
+
+        disableButtons();
+
+
+        showStatus(
+          "The shopping task has ended because the time limit was reached."
+        );
+
+      }
+
     }
-  }
 
-},1000);
+  },
+  1000
+);
 
 
-/* =========================================================
+/* =====================================================
    DISABLE BUTTONS
-   ========================================================= */
+   ===================================================== */
 
 function disableButtons(){
 
   const buttons =
-  document.querySelectorAll("button");
+    document.querySelectorAll(
+      "button"
+    );
 
-  buttons.forEach(function(button){
 
-    button.disabled = true;
+  buttons.forEach(
+    function(button){
 
-  });
+      button.disabled =
+        true;
+
+    }
+  );
+
 }
 
 
-/* =========================================================
+/* =====================================================
    SHOW STATUS
-   ========================================================= */
+   ===================================================== */
 
 function showStatus(message){
 
   const status =
-  document.getElementById("status");
+    document.getElementById(
+      "status"
+    );
 
-  status.textContent = message;
 
-  status.classList.remove("hidden");
+  status.textContent =
+    message;
+
+
+  status.classList.remove(
+    "hidden"
+  );
+
 }
 
 
-/* =========================================================
+/* =====================================================
    PRODUCT SELECTION
-   ========================================================= */
+   ===================================================== */
 
 function chooseProduct(choice){
 
+
+  /*
+     Prevent multiple selections.
+  */
+
   if(finished){
+
     return;
+
   }
+
 
   finished = true;
 
-  clearInterval(timer);
+
+  clearInterval(
+    timer
+  );
+
 
   /*
-   Record the actual observed choice.
+     Record the actual observed
+     product choice.
   */
 
   sendEvent(
@@ -414,38 +576,69 @@ function chooseProduct(choice){
     choice
   );
 
+
+  /*
+     Disable all buttons.
+  */
+
   disableButtons();
+
+
+  /*
+     Tell the participant that
+     the task is complete.
+  */
 
   showStatus(
     "Thank you. Your selection has been recorded. Your participation is complete."
   );
+
 }
 
 
-/* =========================================================
+/* =====================================================
    EXIT
-   ========================================================= */
+   ===================================================== */
 
 function exitTask(){
 
+
   if(finished){
+
     return;
+
   }
+
 
   finished = true;
 
-  clearInterval(timer);
 
-  sendEvent("EXIT");
+  clearInterval(
+    timer
+  );
+
+
+  /*
+     Record exit.
+  */
+
+  sendEvent(
+    "EXIT"
+  );
+
 
   disableButtons();
+
 
   showStatus(
     "The shopping task has ended. Thank you for participating."
   );
+
 }
 
 </script>
 
+
 </body>
+
 </html>
