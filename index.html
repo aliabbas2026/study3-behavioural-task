@@ -334,45 +334,28 @@ let seconds = 60;
    SEND EVENT TO GOOGLE APPS SCRIPT
    ========================================================= */
 
+const ENDPOINT =
+"https://script.google.com/macros/s/AKfycbypdgE99N4ZHaXjdesm08obXB5S05OkYuAKj59OFJzjDoUoCr3rVRAHty_uI8Twbhgf/exec";
+
+
 function sendEvent(eventType, choice = "") {
 
   const url =
     ENDPOINT +
-    "?participant_id=" +
-    encodeURIComponent(participantId) +
-
-    "&condition=" +
-    encodeURIComponent(condition) +
-
-    "&event=" +
-    encodeURIComponent(eventType) +
-
-    "&choice=" +
-    encodeURIComponent(choice) +
-
-    "&page=" +
-    encodeURIComponent(location.href);
-
-
-  /*
-   * GET request is used here because it has already
-   * been confirmed that the Web App endpoint is reachable.
-   */
+    "?participant_id=" + encodeURIComponent(participantId) +
+    "&condition=" + encodeURIComponent(condition) +
+    "&event=" + encodeURIComponent(eventType) +
+    "&choice=" + encodeURIComponent(choice) +
+    "&page=" + encodeURIComponent(location.href);
 
   fetch(url, {
-    method:"GET",
-    mode:"no-cors"
-  }).catch(function(error){
-
-    /*
-     * Errors are intentionally not displayed
-     * to participants.
-     */
-
+    method: "GET",
+    mode: "no-cors"
   });
-
 }
 
+
+sendEvent("TASK_STARTED");
 
 /* =========================================================
    TASK START
