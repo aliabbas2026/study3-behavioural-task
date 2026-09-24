@@ -1,18 +1,13 @@
 <!doctype html>
-
 <html lang="en">
 
 <head>
-
 <meta charset="utf-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Simulated Online Shopping Task</title>
 
 <style>
-
 body{
   font-family:Arial,sans-serif;
   background:#f5f6f8;
@@ -26,8 +21,7 @@ body{
   padding:28px 18px 50px;
 }
 
-.notice,
-.card{
+.notice,.card{
   background:#fff;
   border:1px solid #ddd;
   border-radius:12px;
@@ -103,6 +97,7 @@ button{
 
 button:disabled{
   opacity:.55;
+  cursor:not-allowed;
 }
 
 .hidden{
@@ -115,22 +110,17 @@ button:disabled{
 }
 
 @media(max-width:700px){
-
   .grid{
     grid-template-columns:1fr;
   }
-
 }
-
 </style>
 
 </head>
 
-
 <body>
 
 <div class="wrap">
-
 
 <div class="notice">
 
@@ -166,15 +156,11 @@ Time remaining:
 Recommended for you by AI
 </span>
 
-<div class="product-img">
-🎧
-</div>
+<div class="product-img">🎧</div>
 
 <h3>SoundPro X1</h3>
 
-<div class="price">
-₹2,999
-</div>
+<div class="price">₹2,999</div>
 
 <div class="meta">
 Battery: 30 hours<br>
@@ -182,35 +168,28 @@ Rating: 4.4/5<br>
 Wireless noise cancellation
 </div>
 
-<button onclick="choose('AI_RECOMMENDED')">
+<button id="aiButton" onclick="chooseProduct('AI_RECOMMENDED')">
 Select this product
 </button>
 
 </div>
 
 
-<!-- ALTERNATIVES -->
+<!-- ALTERNATIVE PRODUCTS -->
 
 <h2>Other Available Headphones</h2>
 
 <div class="grid">
 
-
 <div class="card">
 
-<span class="badge">
-Alternative
-</span>
+<span class="badge">Alternative</span>
 
-<div class="product-img">
-🎧
-</div>
+<div class="product-img">🎧</div>
 
 <h3>SoundPro Y1</h3>
 
-<div class="price">
-₹2,999
-</div>
+<div class="price">₹2,999</div>
 
 <div class="meta">
 Battery: 28 hours<br>
@@ -218,7 +197,7 @@ Rating: 4.4/5<br>
 Wireless noise cancellation
 </div>
 
-<button onclick="choose('ALTERNATIVE_1')">
+<button onclick="chooseProduct('ALTERNATIVE_1')">
 Select this product
 </button>
 
@@ -227,19 +206,13 @@ Select this product
 
 <div class="card">
 
-<span class="badge">
-Alternative
-</span>
+<span class="badge">Alternative</span>
 
-<div class="product-img">
-🎧
-</div>
+<div class="product-img">🎧</div>
 
 <h3>SoundPro Z1</h3>
 
-<div class="price">
-₹2,999
-</div>
+<div class="price">₹2,999</div>
 
 <div class="meta">
 Battery: 32 hours<br>
@@ -247,46 +220,37 @@ Rating: 4.3/5<br>
 Wireless noise cancellation
 </div>
 
-<button onclick="choose('ALTERNATIVE_2')">
+<button onclick="chooseProduct('ALTERNATIVE_2')">
 Select this product
 </button>
 
 </div>
 
-
 </div>
 
 
-<!-- EXIT -->
+<!-- EXIT BUTTON -->
 
 <div style="text-align:center;margin-top:28px">
 
-<button class="exit"
-        onclick="exitTask()">
-
+<button class="exit" onclick="exitTask()">
 Exit shopping
-
 </button>
 
 </div>
 
 
-<!-- STATUS -->
+<!-- STATUS MESSAGE -->
 
-<div id="status"
-     class="hidden notice">
-
-</div>
-
+<div id="status" class="hidden notice"></div>
 
 </div>
 
 
 <script>
 
-
 /* =========================================================
-   GOOGLE APPS SCRIPT WEB APP
+   APPS SCRIPT ENDPOINT
    ========================================================= */
 
 const ENDPOINT =
@@ -297,28 +261,14 @@ const ENDPOINT =
    PARTICIPANT INFORMATION
    ========================================================= */
 
-const params =
-new URLSearchParams(location.search);
-
-
-/*
- * If no participant ID is supplied,
- * create a temporary unique ID.
- */
+const params = new URLSearchParams(window.location.search);
 
 const participantId =
 params.get("pid") ||
-crypto.randomUUID();
-
-
-/*
- * Condition can be passed through the URL
- * if required later.
- */
+("P-" + Date.now() + "-" + Math.random().toString(36).substring(2,8));
 
 const condition =
-params.get("cond") ||
-"unknown";
+params.get("cond") || "unknown";
 
 
 /* =========================================================
@@ -326,36 +276,46 @@ params.get("cond") ||
    ========================================================= */
 
 let finished = false;
-
 let seconds = 60;
 
 
 /* =========================================================
-   SEND EVENT TO GOOGLE APPS SCRIPT
+   SEND DATA TO GOOGLE APPS SCRIPT
    ========================================================= */
-
-const ENDPOINT =
-"https://script.google.com/macros/s/AKfycbypdgE99N4ZHaXjdesm08obXB5S05OkYuAKj59OFJzjDoUoCr3rVRAHty_uI8Twbhgf/exec";
-
 
 function sendEvent(eventType, choice = "") {
 
   const url =
     ENDPOINT +
-    "?participant_id=" + encodeURIComponent(participantId) +
-    "&condition=" + encodeURIComponent(condition) +
-    "&event=" + encodeURIComponent(eventType) +
-    "&choice=" + encodeURIComponent(choice) +
-    "&page=" + encodeURIComponent(location.href);
+    "?participant_id=" +
+    encodeURIComponent(participantId) +
+
+    "&condition=" +
+    encodeURIComponent(condition) +
+
+    "&event=" +
+    encodeURIComponent(eventType) +
+
+    "&choice=" +
+    encodeURIComponent(choice) +
+
+    "&page=" +
+    encodeURIComponent(window.location.href);
+
+  /*
+   GET request.
+   This has already been successfully tested
+   against your Apps Script endpoint.
+  */
 
   fetch(url, {
     method: "GET",
     mode: "no-cors"
+  }).catch(function(error) {
+    console.log("Recording error:", error);
   });
 }
 
-
-sendEvent("TASK_STARTED");
 
 /* =========================================================
    TASK START
@@ -368,14 +328,15 @@ sendEvent("TASK_STARTED");
    TIMER
    ========================================================= */
 
+const timerElement =
+document.getElementById("timer");
+
 const timer =
 setInterval(function(){
 
   seconds--;
 
-  document.getElementById("timer")
-    .textContent = seconds;
-
+  timerElement.textContent = seconds;
 
   if(seconds <= 0){
 
@@ -392,9 +353,7 @@ setInterval(function(){
       showStatus(
         "The shopping task has ended because the time limit was reached."
       );
-
     }
-
   }
 
 },1000);
@@ -406,14 +365,14 @@ setInterval(function(){
 
 function disableButtons(){
 
-  document
-    .querySelectorAll("button")
-    .forEach(function(button){
+  const buttons =
+  document.querySelectorAll("button");
 
-      button.disabled = true;
+  buttons.forEach(function(button){
 
-    });
+    button.disabled = true;
 
+  });
 }
 
 
@@ -424,20 +383,19 @@ function disableButtons(){
 function showStatus(message){
 
   const status =
-    document.getElementById("status");
+  document.getElementById("status");
 
   status.textContent = message;
 
   status.classList.remove("hidden");
-
 }
 
 
 /* =========================================================
-   PRODUCT CHOICE
+   PRODUCT SELECTION
    ========================================================= */
 
-function choose(choice){
+function chooseProduct(choice){
 
   if(finished){
     return;
@@ -448,8 +406,8 @@ function choose(choice){
   clearInterval(timer);
 
   /*
-   * Record the observed product choice.
-   */
+   Record the actual observed choice.
+  */
 
   sendEvent(
     "PRODUCT_SELECTED",
@@ -461,7 +419,6 @@ function choose(choice){
   showStatus(
     "Thank you. Your selection has been recorded. Your participation is complete."
   );
-
 }
 
 
@@ -486,12 +443,9 @@ function exitTask(){
   showStatus(
     "The shopping task has ended. Thank you for participating."
   );
-
 }
 
 </script>
 
-
 </body>
-
 </html>
